@@ -38,8 +38,56 @@
   - создать файл 'touch /.autorelabel'.
 
 ### Установить систему с LVM, после чего переименовать VG.
+Просмотр информации о текщих VG:
+```
+# vgs
+VG #PV #LV #SN Attr VSize VFree
+centos 1 2 0 wz--n- <14.80 0
+```
+Переименование VG:
+```
+# vgrename centos root
+Volume group "centos" successfully renamed to "root"
+```
+Правка конфигурационных файлов: `/etc/fstab`, `/etc/default/grub`, `/boot/grub2/grub.cfg`. В них необходимо изменить старое имя VG "centos", на новое "root".
 
-
-
+Переконфигурация initrd:
+```
+mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+```
+Проверка после перезагрузки:
+```
+# vgs
+VG #PV #LV #SN Attr VSize VFree
+root 1 2 0 wz--n- <14.80 0
+```
 
 ### Добавить модуль в initrd.
+Создание каталога для модуля:
+```
+# mkdir /usr/lib/dracut/modules.d/01test
+```
+В каталог необходимо добавить скрипты [module-setup.sh](https://github.com/shulgazavr/ld_sys/blob/main/module-setup.sh) и [test.sh](https://github.com/shulgazavr/ld_sys/blob/main/test.sh).
+
+Переконфигурация initrd:
+```
+# mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+```
+Проверка загруженности модуля:
+```
+# lsinitrd -m /boot/initramfs-$(uname -r).img | grep test
+test
+```
+Для просмотра результата работы модуля, необходимо удалить `rhgb quiet` из загрузочной строки конфигурационного файла `/boot/grub2/grub.cfg`. 
+> Примечание: удаление параметров `rhgb` и `quiet` увеличивает подробность загрузочных сообщений.
+> 
+Проверяем корректность введённых изменений:
+```
+# grub2-mkconfig
+```
+Переконфигурация grub:
+```
+/boot/grub2/grub.cfg (grub2-mkconfig | tee /boot/grub2/grub.cfg)
+```
+В итоге, при загрузке, будет пауза на 10 секунд и отображение пингвина.
+
