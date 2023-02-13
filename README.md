@@ -25,7 +25,7 @@
   - создать файл 'touch /.autorelabel'.
 
 > Примечания:
-> - `.autorelabel` - файл, позволяющий SELinux обновить метки всех файлов в этой системе на правильные контексты [подробнее](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security-enhanced_linux/sect-security-enhanced_linux-working_with_selinux-selinux_contexts_labeling_files).
+> - `.autorelabel` - файл, позволяющий SELinux обновить метки всех файлов в этой системе на правильные контексты ([подробнее](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/6/html/security-enhanced_linux/sect-security-enhanced_linux-working_with_selinux-selinux_contexts_labeling_files)).
 > - выставление параметра загрузки `rd.break`, останавливает процедуру загрузки, пока она еще находится в стадии initramfs (начальная файловая система в оперативной памяти).
 
 Способ 3. rw init=/sysroot/bin/sh
